@@ -1,6 +1,6 @@
 # Manasvi Gupta — Portfolio
 
-Personal portfolio website built with React + Vite + Tailwind CSS.
+Personal portfolio website built with React + Vite + Tailwind CSS + AI (To modify it better)
 
 ## Tech Stack
 - React 18
