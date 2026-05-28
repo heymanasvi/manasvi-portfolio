@@ -1,3 +1,5 @@
+import { useEffect, useState } from "react";
+
 const projects = [
   {
     idx: '01 — Featured',
@@ -35,41 +37,88 @@ const projects = [
   },
 ]
 
-const chipStyle = (hi) => ({
+const chipStyle = (hi, isMobile) => ({
   fontFamily: "'DM Mono', monospace",
-  fontSize: '0.67rem',
-  padding: '0.22rem 0.6rem',
+  fontSize: isMobile ? '0.6rem' : '0.67rem',
+  padding: isMobile ? '0.2rem 0.5rem' : '0.22rem 0.6rem',
   borderRadius: 3,
-  border: hi ? '1px solid rgba(124,90,245,0.35)' : '1px solid #28283a',
+  border: hi
+    ? '1px solid rgba(124,90,245,0.35)'
+    : '1px solid #28283a',
   color: hi ? 'var(--accent-light)' : '#44445a',
   background: hi ? 'var(--accent-dim)' : 'var(--bg4)',
 })
 
-const btnStyle = {
+const btnStyle = (isMobile) => ({
   fontFamily: "'DM Mono', monospace",
-  fontSize: '0.72rem',
+  fontSize: isMobile ? '0.65rem' : '0.72rem',
   color: '#8888a8',
   display: 'inline-flex',
   alignItems: 'center',
   gap: '0.35rem',
-  padding: '0.35rem 0.7rem',
+  padding: isMobile ? '0.32rem 0.6rem' : '0.35rem 0.7rem',
   border: '1px solid #1e1e2a',
   borderRadius: 4,
   background: 'var(--bg4)',
   transition: 'all 0.2s',
   textDecoration: 'none',
-}
+})
 
 export default function Projects() {
-  return (
-    <section id="projects" style={{ padding: '7rem 0', background: 'var(--bg2)' }}>
-      <div style={{ maxWidth: 1080, margin: '0 auto', padding: '0 2.5rem' }}>
-        <div className="section-eyebrow">Selected Work</div>
-        <h2 className="section-title">Things I've built.</h2>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
-          {projects.map(p => (
-            <div key={p.idx}
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  return (
+    <section
+      id="projects"
+      style={{
+        padding: isMobile ? '4rem 0' : '7rem 0',
+        background: 'var(--bg2)',
+        width: '100%',
+        overflow: 'hidden',
+      }}
+    >
+
+      <div
+        style={{
+          maxWidth: 1080,
+          margin: '0 auto',
+          padding: isMobile ? '0 1rem' : '0 2.5rem',
+          width: '100%',
+        }}
+      >
+
+        <div className="section-eyebrow">
+          Selected Work
+        </div>
+
+        <h2 className="section-title">
+          Things I've built.
+        </h2>
+
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr',
+            gap: isMobile ? '1rem' : '1.5rem',
+            width: '100%',
+          }}
+        >
+
+          {projects.map((p) => (
+
+            <div
+              key={p.idx}
               style={{
                 background: 'var(--bg3)',
                 border: '1px solid var(--border)',
@@ -78,44 +127,193 @@ export default function Projects() {
                 display: 'flex',
                 flexDirection: 'column',
                 transition: 'border-color 0.3s, transform 0.3s',
-                gridColumn: p.featured ? '1 / -1' : undefined,
+                gridColumn: !isMobile && p.featured
+                  ? '1 / -1'
+                  : undefined,
               }}
-              onMouseEnter={e => { e.currentTarget.style.borderColor = '#28283a'; e.currentTarget.style.transform = 'translateY(-4px)' }}
-              onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.transform = 'none' }}
+
+              onMouseEnter={(e) => {
+                e.currentTarget.style.borderColor = '#28283a';
+                e.currentTarget.style.transform = 'translateY(-4px)';
+              }}
+
+              onMouseLeave={(e) => {
+                e.currentTarget.style.borderColor = 'var(--border)';
+                e.currentTarget.style.transform = 'none';
+              }}
             >
-              <div style={{ height: 2, background: 'var(--accent)' }} />
-              <div style={{ padding: '1.75rem', flex: 1 }}>
-                <div style={{ fontFamily: "'DM Mono', monospace", fontSize: '0.65rem', color: '#44445a', marginBottom: '0.9rem', letterSpacing: '0.1em' }}>{p.idx}</div>
-                <div style={{ fontFamily: "'DM Serif Display', serif", fontSize: '1.3rem', color: '#f0f0f8', marginBottom: '0.65rem', lineHeight: 1.2, fontWeight: 400 }}>{p.name}</div>
-                <p style={{ fontSize: '0.86rem', color: '#8888a8', lineHeight: 1.8, marginBottom: '1.25rem' }}>{p.desc}</p>
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.45rem' }}>
-                  {p.chips.map(c => (
-                    <span key={c} style={chipStyle(p.highlight.includes(c))}>{c}</span>
-                  ))}
-                </div>
-              </div>
-              <div style={{ padding: '1.1rem 1.75rem', borderTop: '1px solid var(--border)', display: 'flex', gap: '0.75rem' }}>
-                <a href={p.github} target="_blank" rel="noreferrer"
-                  style={btnStyle}
-                  onMouseEnter={e => { e.currentTarget.style.color = 'var(--accent-light)'; e.currentTarget.style.borderColor = 'rgba(124,90,245,0.4)'; e.currentTarget.style.background = 'var(--accent-dim)' }}
-                  onMouseLeave={e => { e.currentTarget.style.color = '#8888a8'; e.currentTarget.style.borderColor = '#1e1e2a'; e.currentTarget.style.background = 'var(--bg4)' }}
+
+              <div
+                style={{
+                  height: 2,
+                  background: 'var(--accent)',
+                }}
+              />
+
+              <div
+                style={{
+                  padding: isMobile ? '1.2rem' : '1.75rem',
+                  flex: 1,
+                }}
+              >
+
+                <div
+                  style={{
+                    fontFamily: "'DM Mono', monospace",
+                    fontSize: '0.65rem',
+                    color: '#44445a',
+                    marginBottom: '0.9rem',
+                    letterSpacing: '0.1em',
+                  }}
                 >
-                  <i className="fa-brands fa-github" /> GitHub
-                </a>
-                {p.demo && (
-                  <a href={p.demo} target="_blank" rel="noreferrer"
-                    style={btnStyle}
-                    onMouseEnter={e => { e.currentTarget.style.color = 'var(--accent-light)'; e.currentTarget.style.borderColor = 'rgba(124,90,245,0.4)'; e.currentTarget.style.background = 'var(--accent-dim)' }}
-                    onMouseLeave={e => { e.currentTarget.style.color = '#8888a8'; e.currentTarget.style.borderColor = '#1e1e2a'; e.currentTarget.style.background = 'var(--bg4)' }}
-                  >
-                    <i className="fa-solid fa-arrow-up-right-from-square" /> Demo
-                  </a>
-                )}
+                  {p.idx}
+                </div>
+
+                <div
+                  style={{
+                    fontFamily: "'DM Serif Display', serif",
+                    fontSize: isMobile ? '1.05rem' : '1.3rem',
+                    color: '#f0f0f8',
+                    marginBottom: '0.65rem',
+                    lineHeight: 1.2,
+                    fontWeight: 400,
+                  }}
+                >
+                  {p.name}
+                </div>
+
+                <p
+                  style={{
+                    fontSize: isMobile ? '0.8rem' : '0.86rem',
+                    color: '#8888a8',
+                    lineHeight: 1.8,
+                    marginBottom: '1.25rem',
+                  }}
+                >
+                  {p.desc}
+                </p>
+
+                <div
+                  style={{
+                    display: 'flex',
+                    flexWrap: 'wrap',
+                    gap: '0.45rem',
+                  }}
+                >
+
+                  {p.chips.map((c) => (
+
+                    <span
+                      key={c}
+                      style={chipStyle(
+                        p.highlight.includes(c),
+                        isMobile
+                      )}
+                    >
+                      {c}
+                    </span>
+
+                  ))}
+
+                </div>
+
               </div>
+
+              <div
+                style={{
+                  padding: isMobile
+                    ? '1rem 1.2rem'
+                    : '1.1rem 1.75rem',
+
+                  borderTop: '1px solid var(--border)',
+
+                  display: 'flex',
+
+                  gap: '0.75rem',
+
+                  flexWrap: 'wrap',
+                }}
+              >
+
+                <a
+                  href={p.github}
+                  target="_blank"
+                  rel="noreferrer"
+
+                  style={btnStyle(isMobile)}
+
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.color =
+                      'var(--accent-light)';
+
+                    e.currentTarget.style.borderColor =
+                      'rgba(124,90,245,0.4)';
+
+                    e.currentTarget.style.background =
+                      'var(--accent-dim)';
+                  }}
+
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.color = '#8888a8';
+
+                    e.currentTarget.style.borderColor =
+                      '#1e1e2a';
+
+                    e.currentTarget.style.background =
+                      'var(--bg4)';
+                  }}
+                >
+                  <i className="fa-brands fa-github" />
+                  GitHub
+                </a>
+
+                {p.demo && (
+
+                  <a
+                    href={p.demo}
+                    target="_blank"
+                    rel="noreferrer"
+
+                    style={btnStyle(isMobile)}
+
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.color =
+                        'var(--accent-light)';
+
+                      e.currentTarget.style.borderColor =
+                        'rgba(124,90,245,0.4)';
+
+                      e.currentTarget.style.background =
+                        'var(--accent-dim)';
+                    }}
+
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.color =
+                        '#8888a8';
+
+                      e.currentTarget.style.borderColor =
+                        '#1e1e2a';
+
+                      e.currentTarget.style.background =
+                        'var(--bg4)';
+                    }}
+                  >
+                    <i className="fa-solid fa-arrow-up-right-from-square" />
+                    Demo
+                  </a>
+
+                )}
+
+              </div>
+
             </div>
+
           ))}
+
         </div>
+
       </div>
+
     </section>
   )
 }

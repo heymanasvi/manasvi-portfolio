@@ -1,3 +1,5 @@
+import { useEffect, useState } from "react";
+
 const groups = [
   {
     icon: 'fa-solid fa-code',
@@ -82,37 +84,147 @@ const groups = [
 ]
 
 export default function Skills() {
-  return (
-    <section id="skills" style={{ padding: '7rem 0' }}>
-      <div style={{ maxWidth: 1080, margin: '0 auto', padding: '0 2.5rem' }}>
-        <div className="section-eyebrow">Technical Skills</div>
-        <h2 className="section-title">What I work with.</h2>
 
-        {groups.map(g => (
-          <div key={g.title} style={{ marginBottom: '2.75rem' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem', marginBottom: '1.25rem' }}>
-              <div style={{
-                width: 32, height: 32, borderRadius: 7,
-                background: 'var(--accent-dim)', border: '1px solid rgba(124,90,245,0.2)',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                color: 'var(--accent-light)', fontSize: '0.85rem', flexShrink: 0,
-              }}>
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  return (
+    <section
+      id="skills"
+      style={{
+        padding: isMobile ? '4rem 0' : '7rem 0',
+        width: '100%',
+        overflow: 'hidden',
+      }}
+    >
+
+      <div
+        style={{
+          maxWidth: 1080,
+          margin: '0 auto',
+          padding: isMobile ? '0 1rem' : '0 2.5rem',
+          width: '100%',
+        }}
+      >
+
+        <div className="section-eyebrow">
+          Technical Skills
+        </div>
+
+        <h2 className="section-title">
+          What I work with.
+        </h2>
+
+        {groups.map((g) => (
+
+          <div
+            key={g.title}
+            style={{
+              marginBottom: isMobile ? '2rem' : '2.75rem',
+            }}
+          >
+
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.85rem',
+                marginBottom: '1.25rem',
+                flexWrap: 'wrap',
+              }}
+            >
+
+              <div
+                style={{
+                  width: isMobile ? 28 : 32,
+                  height: isMobile ? 28 : 32,
+
+                  borderRadius: 7,
+
+                  background: 'var(--accent-dim)',
+
+                  border:
+                    '1px solid rgba(124,90,245,0.2)',
+
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+
+                  color: 'var(--accent-light)',
+
+                  fontSize: isMobile ? '0.75rem' : '0.85rem',
+
+                  flexShrink: 0,
+                }}
+              >
                 <i className={g.icon} />
               </div>
-              <span style={{ fontFamily: "'DM Mono', monospace", fontSize: '0.78rem', color: '#8888a8', letterSpacing: '0.1em', textTransform: 'uppercase' }}>
+
+              <span
+                style={{
+                  fontFamily: "'DM Mono', monospace",
+
+                  fontSize: isMobile
+                    ? '0.68rem'
+                    : '0.78rem',
+
+                  color: '#8888a8',
+
+                  letterSpacing: '0.1em',
+
+                  textTransform: 'uppercase',
+
+                  lineHeight: 1.5,
+                }}
+              >
                 {g.title}
               </span>
+
             </div>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.65rem' }}>
-              {g.skills.map(s => (
-                <span key={s.name} className="pill">
-                  <i className={s.icon} /> {s.name}
+
+            <div
+              style={{
+                display: 'flex',
+                flexWrap: 'wrap',
+                gap: isMobile ? '0.5rem' : '0.65rem',
+              }}
+            >
+
+              {g.skills.map((s) => (
+
+                <span
+                  key={s.name}
+                  className="pill"
+                  style={{
+                    fontSize: isMobile ? '0.72rem' : undefined,
+                    padding: isMobile
+                      ? '0.42rem 0.75rem'
+                      : undefined,
+                  }}
+                >
+                  <i className={s.icon} />
+                  {s.name}
                 </span>
+
               ))}
+
             </div>
+
           </div>
+
         ))}
+
       </div>
+
     </section>
   )
 }
