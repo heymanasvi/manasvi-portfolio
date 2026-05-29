@@ -1,3 +1,5 @@
+import { useEffect, useState } from 'react'
+
 const items = [
   {
     when: '2023 — Present',
@@ -40,15 +42,23 @@ const items = [
 ]
 
 export default function Experience() {
+  const [isMobile, setIsMobile] = useState(() => window.innerWidth < 768)
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768)
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
+
   return (
-    <section id="experience" style={{ padding: '7rem 0' }}>
-      <div style={{ maxWidth: 1080, margin: '0 auto', padding: '0 2.5rem' }}>
+    <section id="experience" style={{ padding: isMobile ? '4rem 0' : '7rem 0' }}>
+      <div style={{ maxWidth: 1080, margin: '0 auto', padding: isMobile ? '0 1rem' : '0 2.5rem', width: '100%' }}>
         <div className="section-eyebrow">Experience</div>
         <h2 className="section-title">Where I've contributed.</h2>
 
-        <div style={{ paddingLeft: '1.5rem', borderLeft: '1px solid #28283a' }}>
+        <div style={{ paddingLeft: isMobile ? '1rem' : '1.5rem', borderLeft: '1px solid #28283a' }}>
           {items.map((item, i) => (
-            <div key={i} style={{ position: 'relative', paddingBottom: i < items.length - 1 ? '2.75rem' : 0, paddingLeft: '1.75rem' }}>
+            <div key={i} style={{ position: 'relative', paddingBottom: i < items.length - 1 ? (isMobile ? '2rem' : '2.75rem') : 0, paddingLeft: isMobile ? '1.25rem' : '1.75rem' }}>
               <div style={{
                 position: 'absolute', left: -5, top: 4,
                 width: 9, height: 9, borderRadius: '50%',

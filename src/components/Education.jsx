@@ -1,3 +1,5 @@
+import { useEffect, useState } from 'react'
+
 const schools = [
   {
     degree: 'B.Tech — Electronics & Communication Engineering',
@@ -18,13 +20,21 @@ const schools = [
 ]
 
 export default function Education() {
+  const [isMobile, setIsMobile] = useState(() => window.innerWidth < 768)
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768)
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
+
   return (
-    <section id="education" style={{ padding: '7rem 0', background: 'var(--bg2)' }}>
-      <div style={{ maxWidth: 1080, margin: '0 auto', padding: '0 2.5rem' }}>
+    <section id="education" style={{ padding: isMobile ? '4rem 0' : '7rem 0', background: 'var(--bg2)' }}>
+      <div style={{ maxWidth: 1080, margin: '0 auto', padding: isMobile ? '0 1rem' : '0 2.5rem', width: '100%' }}>
         <div className="section-eyebrow">Education</div>
         <h2 className="section-title">Academic background.</h2>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: isMobile ? '1rem' : '1.5rem' }}>
           {schools.map(s => (
             <div key={s.school}
               style={{ background: 'var(--bg3)', border: '1px solid var(--border)', borderRadius: 10, overflow: 'hidden', transition: 'border-color 0.25s, transform 0.25s' }}

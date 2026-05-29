@@ -1,3 +1,5 @@
+import { useEffect, useState } from 'react'
+
 const certs = [
   { icon: 'fa-solid fa-file-shield', title: 'Patent Under Review', desc: 'AI-based Smart Bed healthcare monitoring system using IoT edge computing and ML-based sleep classification.', tag: 'Under Review · 2024' },
   { icon: 'fa-solid fa-microphone-lines', title: 'SymResearch 2.0 — Symbiosis College, Pune', desc: 'Presented research on smart healthcare monitoring using embedded ML at the Symbiosis Research Symposium.' },
@@ -6,13 +8,21 @@ const certs = [
 ]
 
 export default function Certifications() {
+  const [isMobile, setIsMobile] = useState(() => window.innerWidth < 768)
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768)
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
+
   return (
-    <section id="certifications" style={{ padding: '7rem 0' }}>
-      <div style={{ maxWidth: 1080, margin: '0 auto', padding: '0 2.5rem' }}>
+    <section id="certifications" style={{ padding: isMobile ? '4rem 0' : '7rem 0' }}>
+      <div style={{ maxWidth: 1080, margin: '0 auto', padding: isMobile ? '0 1rem' : '0 2.5rem', width: '100%' }}>
         <div className="section-eyebrow">Recognition</div>
         <h2 className="section-title">Achievements & certifications.</h2>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.25rem' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: isMobile ? '1rem' : '1.25rem' }}>
           {certs.map(c => (
             <div key={c.title}
               style={{ background: 'var(--bg3)', border: '1px solid var(--border)', borderRadius: 9, padding: '1.35rem', display: 'flex', gap: '1rem', alignItems: 'flex-start', transition: 'border-color 0.25s, transform 0.25s' }}
