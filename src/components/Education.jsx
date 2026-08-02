@@ -6,7 +6,7 @@ const schools = [
     school: 'Bharati Vidyapeeth Deemed University, Pune',
     meta: 'Expected 2027 · Pimpri-Chinchwad, Pune',
     bottomLabel: 'Current CGPA',
-    bottomVal: '8.6 / 10',
+    bottomVal: '9.10 / 10',
     bottomIsLarge: true,
   },
   {
